@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { SERVICES, ADDONS, FREQUENCIES } from "@/lib/prices";
 import { formatCAD } from "@/lib/estimate";
-import ServiceIcon from "@/components/ServiceIcon";
+import { serviceImg } from "@/lib/images";
 
 export const metadata = { title: "Services — CleanFlow AI" };
 
@@ -15,7 +15,7 @@ export default function ServicesPage() {
         <div className="grid services-grid">
           {SERVICES.map((s) => (
             <article className="card" key={s.id} id={s.id}>
-              <ServiceIcon id={s.id} />
+              <img className="card-img" src={serviceImg(s.id)} alt={s.name} loading="lazy" />
               <h2 className="h3">{s.name}</h2>
               <p className="muted">{s.short}</p>
               <p className="price">From {formatCAD(s.basePrice)}</p>

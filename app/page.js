@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { SERVICES } from "@/lib/prices";
 import { formatCAD } from "@/lib/estimate";
-import ServiceIcon from "@/components/ServiceIcon";
+import { img, serviceImg } from "@/lib/images";
 
 export default function HomePage() {
   return (
@@ -20,6 +20,8 @@ export default function HomePage() {
               <Link href="/booking" className="btn btn-ghost">Book a cleaning</Link>
             </div>
           </div>
+          <div className="hero-side">
+          <img className="hero-img" src={img("home")} alt="Cleaners at work in a bright living room" />
           <div className="hero-card">
             <h3>Why CleanFlow</h3>
             <ul className="checks">
@@ -28,6 +30,7 @@ export default function HomePage() {
               <li>Morning, afternoon &amp; evening slots</li>
               <li>Discounts for recurring visits</li>
             </ul>
+          </div>
           </div>
         </div>
       </section>
@@ -41,7 +44,7 @@ export default function HomePage() {
           <div className="grid">
             {SERVICES.map((s) => (
               <Link href="/services" key={s.id} className="card card-link">
-                <ServiceIcon id={s.id} />
+                <img className="card-img" src={serviceImg(s.id)} alt={s.name} loading="lazy" />
                 <h3>{s.name}</h3>
                 <p className="muted">{s.short}</p>
                 <p className="price">From {formatCAD(s.basePrice)}*</p>
