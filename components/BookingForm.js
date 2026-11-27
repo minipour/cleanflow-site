@@ -1,4 +1,19 @@
 "use client";
+import { validateBooking } from "@/lib/validateBooking";
+import { getService } from "@/lib/prices";
+
+function demoBooking(form) {
+  const { ok, errors, data } = validateBooking(form);
+  if (!ok) return { ok: false, errors };
+  return {
+    ok: true,
+    reference: "CF-" + Date.now().toString(36).toUpperCase().slice(-5),
+    service: getService(data.serviceId).name,
+    date: data.date,
+    timeSlot: TIME_SLOTS.find((t) => t.id === data.timeSlot).label,
+    estimate: calculateEstimate(data),
+  };
+}
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { SERVICES, TIME_SLOTS, FREQUENCIES, ADDONS } from "@/lib/prices";
@@ -38,12 +53,18 @@ export default function BookingForm({ initial }) {
     setSending(true);
     setErrors({});
     try {
-      const res = await fetch("/api/booking", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
+      let data;
+      if (process.env.NEXT_PUBLIC_STATIC_DEMO) {
+        // Showcase (GitHub Pages) version: no server, check the form in the browser.
+        data = demoBooking(form);
+      } else {
+        const res = await fetch("/api/booking", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        });
+        data = await res.json();
+      }
       if (!data.ok) setErrors(data.errors || { form: "Something went wrong." });
       else {
         setDone(data);

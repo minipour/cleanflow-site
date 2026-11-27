@@ -1,4 +1,5 @@
 "use client";
+import { fallbackAnswer } from "@/lib/assistant";
 import { useEffect, useRef, useState } from "react";
 
 const SUGGESTIONS = [
@@ -29,12 +30,19 @@ export default function ChatPage() {
     setInput("");
     setLoading(true);
     try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next.slice(1) }),
-      });
-      const data = await res.json();
+      let data;
+      if (process.env.NEXT_PUBLIC_STATIC_DEMO) {
+        // Showcase (GitHub Pages) version: no server, use the built-in answerer.
+        await new Promise((r) => setTimeout(r, 500));
+        data = { reply: fallbackAnswer(content) };
+      } else {
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: next.slice(1) }),
+        });
+        data = await res.json();
+      }
       setMessages((m) => [...m, { role: "assistant", content: data.reply || data.error || "Sorry, something went wrong." }]);
     } catch {
       setMessages((m) => [...m, { role: "assistant", content: "Sorry, I couldn't connect. Please try again." }]);

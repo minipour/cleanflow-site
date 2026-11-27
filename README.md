@@ -1,3 +1,11 @@
+# CleanFlow AI
+
+**Live demo (showcase):** https://minipour.github.io/cleanflow-site/
+
+The live demo is a static showcase version: the price estimate and booking form work in the browser, and the chat uses built-in answers (no AI key). Bookings in the demo are not sent or saved. Prices are sample prices.
+
+---
+
 # CleanFlow AI — Home & Office Cleaning Website
 
 A website for a home and office cleaning business. It has 5 pages:
